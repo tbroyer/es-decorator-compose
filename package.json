@@ -23,14 +23,118 @@
     ".": "./index.js"
   },
   "scripts": {
-    "format": "prettier -w .",
-    "lint": "prettier -l . && eslint .",
-    "test": "tsd"
+    "format": "wireit",
+    "lint": "wireit",
+    "test": "wireit"
   },
   "devDependencies": {
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.23.9",
+    "@babel/eslint-parser": "^7.23.9",
+    "@babel/eslint-plugin": "^7.23.5",
+    "@babel/plugin-proposal-decorators": "^7.23.9",
     "eslint": "^8.56.0",
     "lit": "^3.1.1",
     "prettier": "^3.2.4",
-    "tsd": "^0.30.4"
+    "tsd": "^0.30.4",
+    "typescript": "^5.3.3",
+    "wireit": "^0.14.4"
+  },
+  "wireit": {
+    "format": {
+      "command": "prettier -w .",
+      "files": [
+        ".prettierignore",
+        "**/*.js",
+        "**/*.ts",
+        "!test-babel/",
+        "!test-typescript/",
+        "*.json",
+        "!package-lock.json"
+      ]
+    },
+    "lint": {
+      "dependencies": [
+        "lint:prettier",
+        "lint:eslint"
+      ]
+    },
+    "lint:prettier": {
+      "command": "prettier -l .",
+      "files": [
+        ".prettierignore",
+        "**/*.js",
+        "**/*.ts",
+        "!test-babel/",
+        "!test-typescript/",
+        "*.json",
+        "!package-lock.json"
+      ]
+    },
+    "lint:eslint": {
+      "command": "eslint .",
+      "files": [
+        "eslint.config.js",
+        "**/*.js",
+        "**/*.ts",
+        "!test-babel/",
+        "!test-typescript/"
+      ]
+    },
+    "test": {
+      "dependencies": [
+        "test:tsd",
+        "test:ts",
+        "test:babel"
+      ]
+    },
+    "test:tsd": {
+      "command": "tsd",
+      "files": [
+        "index.*",
+        "test-d/"
+      ]
+    },
+    "test:ts": {
+      "dependencies": [
+        "tsc"
+      ],
+      "command": "node --test test-typescript/",
+      "files": [
+        "index.js",
+        "test-typescript/"
+      ]
+    },
+    "tsc": {
+      "command": "tsc",
+      "files": [
+        "tsconfig.json",
+        "index.*",
+        "test/"
+      ],
+      "output": [
+        "test-typescript/"
+      ]
+    },
+    "test:babel": {
+      "dependencies": [
+        "babel"
+      ],
+      "command": "node --test test-babel/",
+      "files": [
+        "index.js",
+        "test-babel/"
+      ]
+    },
+    "babel": {
+      "command": "babel --extensions .ts --out-dir test-babel/ test/",
+      "files": [
+        "babel.config.json",
+        "test/"
+      ],
+      "output": [
+        "test-babel/"
+      ]
+    }
   }
 }

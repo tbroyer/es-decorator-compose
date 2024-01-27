@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    // Language and Environment
+    "target": "ES2022",
+    "lib": ["ESNext", "DOM"],
+    // Modules
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    // Emit
+    "outDir": "test-typescript",
+    "sourceMap": true,
+    // Type checking
+    "strict": true,
+    // Interop constraints
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": ["test/**/*"],
+}

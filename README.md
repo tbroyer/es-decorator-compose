@@ -1,7 +1,8 @@
 # decorator-compose
 
 This library exposes a helper function to create a composed decorator.
-Only standard decorators are supported, not TypeScript _experimental_ decorators.
+Only standard decorators are supported, not TypeScript _experimental_ decorators;
+it's tested with both Babel's [`@babel/plugin-proposal-decorators`](https://babeljs.io/docs/babel-plugin-proposal-decorators) and TypeScript 5+.
 
 ## Use-case
 
