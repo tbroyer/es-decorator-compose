@@ -66,3 +66,12 @@ class Foo {
   @composedDecorator("option") accessor bar;
 }
 ```
+
+### Usage with TypeScript
+
+The library function comes with typings for TypeScript,
+that will make sure that passed in decorators are compatible with each others,
+and return an correctly typed decorator.
+
+There are times where TypeScript's **type inference** doesn't work though,
+and you have to lend it a hand being explicit with its generic arguments.
