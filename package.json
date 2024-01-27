@@ -2,6 +2,10 @@
   "name": "decorator-compose",
   "version": "0.0.0",
   "description": "Helper function to create a composed decorator",
+  "keywords": [
+    "decorators",
+    "compose"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tbroyer/es-decorator-compose.git"
