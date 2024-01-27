@@ -1,0 +1,31 @@
+{
+  "name": "decorator-compose",
+  "version": "0.0.0",
+  "description": "Helper function to create a composed decorator",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbroyer/es-decorator-compose.git"
+  },
+  "author": "Thomas Broyer <t.broyer@ltgt.net>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/tbroyer/es-decorator-compose/issues"
+  },
+  "homepage": "https://github.com/tbroyer/es-decorator-compose#readme",
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "format": "prettier -w .",
+    "lint": "prettier -l . && eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4"
+  }
+}
