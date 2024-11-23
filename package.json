@@ -32,17 +32,18 @@
     "test": "wireit"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.23.9",
-    "@babel/eslint-parser": "^7.23.9",
-    "@babel/eslint-plugin": "^7.23.5",
-    "@babel/plugin-proposal-decorators": "^7.23.9",
-    "eslint": "^8.56.0",
-    "lit": "^3.1.1",
-    "prettier": "^3.2.4",
-    "tsd": "^0.30.4",
-    "typescript": "^5.3.3",
-    "wireit": "^0.14.4"
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/eslint-parser": "^7.25.9",
+    "@babel/eslint-plugin": "^7.25.9",
+    "@babel/plugin-proposal-decorators": "^7.25.9",
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "lit": "^3.2.1",
+    "prettier": "^3.3.3",
+    "tsd": "^0.31.2",
+    "typescript": "^5.7.2",
+    "wireit": "^0.14.9"
   },
   "wireit": {
     "format": {

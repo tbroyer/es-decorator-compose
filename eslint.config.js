@@ -5,6 +5,7 @@ import babel from "@babel/eslint-plugin";
 export default [
   {
     ignores: [
+      ".wireit/",
       "test-babel/**",
       "test-typescript/**",
       "**/*.d.ts",
