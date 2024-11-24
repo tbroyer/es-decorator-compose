@@ -1,6 +1,5 @@
 import js from "@eslint/js";
-import babelParser from "@babel/eslint-parser";
-import babel from "@babel/eslint-plugin";
+import tseslint from "typescript-eslint";
 
 export default [
   {
@@ -13,20 +12,21 @@ export default [
     ],
   },
   js.configs.recommended,
+
   {
     files: ["test/**/*.ts"],
     languageOptions: {
-      parser: babelParser,
-    },
-    plugins: {
-      babel,
-    },
-    rules: {
-      "babel/new-cap": "error", // handles decorators
-      "no-undef": "off", // replaced by @babel/no-undef
-      "babel/no-undef": "error", // handles auto-accessors
-      "babel/semi": "error", // handles class properties
-      "no-unused-vars": "off", // TypeScript requires decorator signatures to exactly match
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
   },
+  ...tseslint.configs.recommendedTypeChecked.map((config) => ({
+    ...config,
+    files: ["test/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  })),
 ];

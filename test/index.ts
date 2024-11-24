@@ -1,17 +1,13 @@
-// @ts-nocheck
-/*
- * This file must stay valid JS as it's processed by both TypeScript and Babel.
- * This means it cannot use type annotations or other generics notation, but
- * because it needs to be a .ts file to have decorators transformed by TypeScript
- * it cannot use JSDoc either, so TypeScript type-checking must be disabled/ignored.
- */
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { compose } from "decorator-compose";
 
-test("class", () => {
-  function prefix(p) {
-    return function (value) {
+void test("class", () => {
+  function prefix(p: string) {
+    // eslint-disable-next-line no-unused-vars
+    return function <Class extends new (...args: any[]) => object>(
+      value: Class,
+    ) {
       return class extends value {
         toString() {
           return `${p}: ${super.toString()}`;
@@ -19,8 +15,12 @@ test("class", () => {
       };
     };
   }
-  function composed(first, second) {
-    return compose(prefix(first), prefix(second));
+  // eslint-disable-next-line no-unused-vars
+  function composed<Class extends new (...args: any[]) => any>(
+    first: string,
+    second: string,
+  ) {
+    return compose<Class>(prefix(first), prefix(second));
   }
 
   @prefix("first")
@@ -46,30 +46,35 @@ test("class", () => {
   assert.equal(bar.toString(), "first: second: original");
 });
 
-describe("method", () => {
-  function prefix(p) {
-    return function (value) {
-      return function (...args) {
+void describe("method", () => {
+  function prefix(p: string) {
+    // eslint-disable-next-line no-unused-vars
+    return function <This>(value: (this: This, ...args: any[]) => string) {
+      return function (this: This, ...args: any[]) {
         return `${p}: ${value.apply(this, args)}`;
-      };
+      } satisfies typeof value;
     };
   }
-  function composed(first, second) {
-    return compose(prefix(first), prefix(second));
+  function composed<This>(first: string, second: string) {
+    // eslint-disable-next-line no-unused-vars
+    return compose<This, (this: This, ...args: any[]) => string>(
+      prefix(first),
+      prefix(second),
+    );
   }
 
-  test("static method", () => {
+  void test("static method", () => {
     const arg = {};
     class Sut {
       @prefix("first")
       @prefix("second")
-      static staticFoo(a) {
+      static staticFoo(a: typeof arg) {
         assert.equal(this, Sut);
         assert.equal(a, arg);
         return "original";
       }
       @composed("first", "second")
-      static staticBar(a) {
+      static staticBar(a: typeof arg) {
         assert.equal(this, Sut);
         assert.equal(a, arg);
         return "original";
@@ -80,18 +85,18 @@ describe("method", () => {
     assert.equal(Sut.staticBar(arg), "first: second: original");
   });
 
-  test("instance method", () => {
+  void test("instance method", () => {
     const arg = {};
     class Sut {
       @prefix("first")
       @prefix("second")
-      foo(a) {
+      foo(a: typeof arg) {
         assert.equal(this, sut);
         assert.equal(a, arg);
         return "original";
       }
       @composed("first", "second")
-      bar(a) {
+      bar(a: typeof arg) {
         assert.equal(this, sut);
         assert.equal(a, arg);
         return "original";
@@ -105,19 +110,21 @@ describe("method", () => {
   });
 });
 
-describe("getter", () => {
-  function prefix(p) {
-    return function (value) {
-      return function () {
+void describe("getter", () => {
+  function prefix(p: string) {
+    // eslint-disable-next-line no-unused-vars
+    return function <This>(value: (this: This) => string) {
+      // eslint-disable-next-line no-unused-vars
+      return function (this: This) {
         return `${p}: ${value.call(this)}`;
       };
     };
   }
-  function composed(first, second) {
-    return compose(prefix(first), prefix(second));
+  function composed<This>(first: string, second: string) {
+    return compose<This, string>(prefix(first), prefix(second));
   }
 
-  test("static getter", () => {
+  void test("static getter", () => {
     class Sut {
       @prefix("first")
       @prefix("second")
@@ -137,7 +144,7 @@ describe("getter", () => {
     assert.equal(Sut.bar, "first: second: original");
   });
 
-  test("instance getter", () => {
+  void test("instance getter", () => {
     class Sut {
       @prefix("first")
       @prefix("second")
@@ -160,31 +167,32 @@ describe("getter", () => {
   });
 });
 
-describe("setter", () => {
-  function prefix(p) {
-    return function (value, context) {
-      return function (v) {
+void describe("setter", () => {
+  function prefix(p: string) {
+    // eslint-disable-next-line no-unused-vars
+    return function <This>(value: (this: This, v: string) => void) {
+      return function (this: This, v: string) {
         return value.call(this, `${p}: ${v}`);
       };
     };
   }
-  function composed(first, second) {
-    return compose(prefix(first), prefix(second));
+  function composed<This>(first: string, second: string) {
+    return compose<This, string>(prefix(first), prefix(second));
   }
 
-  test("static setter", () => {
+  void test("static setter", () => {
     class Sut {
-      static _foo;
+      static _foo: string;
       @prefix("first")
       @prefix("second")
-      static set foo(value) {
+      static set foo(value: string) {
         assert.equal(this, Sut);
         this._foo = value;
       }
 
-      static _bar;
+      static _bar: string;
       @composed("first", "second")
-      static set bar(value) {
+      static set bar(value: string) {
         assert.equal(this, Sut);
         this._bar = value;
       }
@@ -197,19 +205,19 @@ describe("setter", () => {
     assert.equal(Sut._bar, "second: first: original");
   });
 
-  test("instance setter", () => {
+  void test("instance setter", () => {
     class Sut {
-      _foo;
+      _foo?: string;
       @prefix("first")
       @prefix("second")
-      set foo(value) {
+      set foo(value: string) {
         assert.equal(this, sut);
         this._foo = value;
       }
 
-      _bar;
+      _bar?: string;
       @composed("first", "second")
-      set bar(value) {
+      set bar(value: string) {
         assert.equal(this, sut);
         this._bar = value;
       }
@@ -225,19 +233,20 @@ describe("setter", () => {
   });
 });
 
-describe("field", () => {
-  function prefix(p) {
-    return function (value, context) {
-      return function (initialValue) {
+void describe("field", () => {
+  function prefix(p: string) {
+    // eslint-disable-next-line no-unused-vars
+    return function (value: undefined) {
+      return function (initialValue: string) {
         return `${p}: ${initialValue}`;
       };
     };
   }
-  function composed(first, second) {
-    return compose(prefix(first), prefix(second));
+  function composed<This>(first: string, second: string) {
+    return compose<This, string>(prefix(first), prefix(second));
   }
 
-  test("static field", () => {
+  void test("static field", () => {
     class Sut {
       @prefix("first")
       @prefix("second")
@@ -251,7 +260,7 @@ describe("field", () => {
     assert.equal(Sut.bar, "second: first: original");
   });
 
-  test("instance field", () => {
+  void test("instance field", () => {
     class Sut {
       @prefix("first")
       @prefix("second")
@@ -268,27 +277,31 @@ describe("field", () => {
   });
 });
 
-describe("accessor", () => {
-  function prefix(p) {
-    return function ({ get, set }, context) {
+void describe("accessor", () => {
+  function prefix(p: string) {
+    return function <This>({
+      get,
+      set,
+    }: ClassAccessorDecoratorTarget<This, string>) {
       return {
-        get() {
+        // eslint-disable-next-line no-unused-vars
+        get(this: This) {
           return `getter(${p}): ${get.call(this)}`;
         },
-        set(value) {
+        set(this: This, value: string) {
           set.call(this, `setter(${p}): ${value}`);
         },
-        init(initialValue) {
+        init(initialValue: string) {
           return `init(${p}): ${initialValue}`;
         },
       };
     };
   }
-  function composed(first, second) {
-    return compose(prefix(first), prefix(second));
+  function composed<This>(first: string, second: string) {
+    return compose<This, string>(prefix(first), prefix(second));
   }
 
-  test("static accessor", () => {
+  void test("static accessor", () => {
     class Sut {
       @prefix("first")
       @prefix("second")
@@ -319,7 +332,7 @@ describe("accessor", () => {
     );
   });
 
-  test("instance accessor", () => {
+  void test("instance accessor", () => {
     class Sut {
       @prefix("first")
       @prefix("second")
