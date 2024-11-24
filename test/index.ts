@@ -2,12 +2,12 @@
 /*
  * This file must stay valid JS as it's processed by both TypeScript and Babel.
  * This means it cannot use type annotations or other generics notation, but
- * because it needs to be la .ts file to have decorators transformed by TypeScript
+ * because it needs to be a .ts file to have decorators transformed by TypeScript
  * it cannot use JSDoc either, so TypeScript type-checking must be disabled/ignored.
  */
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
-import { compose } from "../index.js";
+import { compose } from "decorator-compose";
 
 test("class", () => {
   function prefix(p) {
