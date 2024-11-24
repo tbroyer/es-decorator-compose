@@ -35,7 +35,7 @@
     "@babel/cli": "^7.25.9",
     "@babel/core": "^7.26.0",
     "@babel/plugin-proposal-decorators": "^7.25.9",
-    "@babel/plugin-transform-typescript": "^7.25.9",
+    "@babel/plugin-syntax-typescript": "^7.25.9",
     "@eslint/js": "^9.15.0",
     "@types/node": "^22.9.3",
     "eslint": "^9.15.0",
@@ -105,7 +105,7 @@
       "dependencies": [
         "tsc"
       ],
-      "command": "node --test test-typescript/",
+      "command": "node --test 'test-typescript/**/*.js'",
       "files": [
         "index.js",
         "test-typescript/"
@@ -126,14 +126,14 @@
       "dependencies": [
         "babel"
       ],
-      "command": "node --test test-babel/",
+      "command": "node --experimental-strip-types --test 'test-babel/**/*.ts'",
       "files": [
         "index.js",
         "test-babel/"
       ]
     },
     "babel": {
-      "command": "babel --extensions .ts --out-dir test-babel/ test/",
+      "command": "babel --extensions .ts --keep-file-extension --out-dir test-babel/ test/",
       "files": [
         "babel.config.json",
         "test/"
