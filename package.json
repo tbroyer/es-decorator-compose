@@ -1,6 +1,6 @@
 {
   "name": "decorator-compose",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Helper function to create a composed decorator",
   "keywords": [
     "decorators",
