@@ -11,7 +11,7 @@ import {
   property,
   state,
 } from "lit/decorators.js";
-import { compose, DecoratorTypes } from "decorator-compose";
+import { compose, type DecoratorTypes } from "decorator-compose";
 
 abstract class Base extends ReactiveElement {}
 abstract class Intermediate extends Base {}

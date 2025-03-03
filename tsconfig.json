@@ -4,6 +4,8 @@
     // Language and Environment
     "target": "ES2022",
     "lib": ["ESNext", "DOM"],
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     // Modules
     "moduleResolution": "nodenext",
     "module": "NodeNext",
