@@ -11,6 +11,11 @@ import {
   property,
   state,
 } from "lit/decorators.js";
+import {
+  parameters,
+  parameter,
+  type ClassMethodParameterDecoratorContext,
+} from "parameters-decorator";
 import { compose, type DecoratorTypes } from "decorator-compose";
 
 abstract class Base extends ReactiveElement {}
@@ -106,6 +111,34 @@ const fieldDec = (
 ) => {};
 expectAssignable<DecoratorTypes.ClassFieldDecorator<Base, boolean>>(fieldDec);
 
+const paramDec = (
+  value: undefined,
+  context: ClassMethodParameterDecoratorContext<
+    undefined | Base | (abstract new (...args: any[]) => Base)
+  >,
+) =>
+  function (value: number) {
+    return value * 2;
+  };
+expectAssignable<DecoratorTypes.ClassMethodParameterDecorator<Base, number>>(
+  paramDec,
+);
+expectAssignable<
+  DecoratorTypes.ClassMethodParameterDecorator<typeof Base, number>
+>(paramDec);
+expectAssignable<
+  DecoratorTypes.ClassMethodParameterDecorator<Intermediate, number>
+>(paramDec);
+expectAssignable<
+  DecoratorTypes.ClassMethodParameterDecorator<typeof Intermediate, number>
+>(paramDec);
+expectAssignable<
+  DecoratorTypes.ClassMethodParameterDecorator<Subclass, number>
+>(paramDec);
+expectAssignable<
+  DecoratorTypes.ClassMethodParameterDecorator<typeof Subclass, number>
+>(paramDec);
+
 //
 // Declare composed decorators, and test their compatibility when applied.
 // (this actually tests applicability of Class*Decorator types as decorators)
@@ -189,6 +222,9 @@ expectType<DecoratorTypes.ClassAccessorDecorator<Base, bigint>>(
 const composedFieldDec = compose(fieldDec);
 expectType<DecoratorTypes.ClassFieldDecorator<Base, boolean>>(composedFieldDec);
 
+// TODO: find an in-the-wild field decorator to compose here
+const composedParamDec = compose(paramDec);
+
 // This applies each decorator independently, to make sure types are OK,
 // then applies the "composed decorator", to check its own type (already
 // checked explicitly above, but still)
@@ -198,10 +234,16 @@ expectType<DecoratorTypes.ClassFieldDecorator<Base, boolean>>(composedFieldDec);
 @customElement("test-element")
 @composedClassDec("test-element")
 @composedClassDec2
+@parameters([paramDec, composedParamDec])
 class Foo extends Base {
+  constructor(param1: number) {
+    super();
+  }
+
   @methodDec
   @eventOptions({})
   @composedMethodDec
+  @parameters(undefined, [paramDec, composedParamDec])
   method(a: string, b: number) {
     return false;
   }
@@ -215,6 +257,7 @@ class Foo extends Base {
   @setterDec
   @state({})
   @composedSetterDec
+  @parameter(paramDec, composedParamDec)
   set prop1(value: number) {}
 
   @accessorDec

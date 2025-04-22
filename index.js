@@ -8,6 +8,7 @@ export function compose(...decorators) {
       if (result === undefined) continue;
       switch (kind) {
         case "field":
+        case "parameter":
           initializers.push(result);
           break;
         case "accessor":
@@ -42,6 +43,7 @@ export function compose(...decorators) {
     }
     switch (kind) {
       case "field":
+      case "parameter":
         return runInitializers;
       case "accessor":
         if (runInitializers) {
@@ -64,5 +66,6 @@ function assertCallable(f) {
 function cloneContext(ctx) {
   ctx = { ...ctx };
   if (ctx.access) ctx.access = { ...ctx.access };
+  if (ctx.function) ctx.function = { ...ctx.function };
   return ctx;
 }

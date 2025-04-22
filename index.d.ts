@@ -22,6 +22,9 @@ export declare function compose<This = unknown, Value = unknown>(
 export declare function compose<This = unknown, Value = unknown>(
   ...decorators: DecoratorTypes.ClassAccessorDecorator<This, Value>[]
 ): DecoratorTypes.ClassAccessorDecorator<This, Value>;
+export declare function compose<This = unknown, Value = unknown>(
+  ...decorators: DecoratorTypes.ClassMethodParameterDecorator<This, Value>[]
+): DecoratorTypes.ClassMethodParameterDecorator<This, Value>;
 
 declare namespace DecoratorTypes {
   type AbstractConstructor<Base = unknown> = abstract new (
@@ -73,4 +76,30 @@ declare namespace DecoratorTypes {
     value: ClassAccessorDecoratorTarget<This, Value>,
     context: ClassAccessorDecoratorContext<This, Value>,
   ) => ClassAccessorDecoratorResult<This, Value> | void;
+
+  // Types inspired by https://github.com/tc39/proposal-class-method-parameter-decorators
+
+  interface ClassMethodParameterDecoratorContext<This> {
+    kind: "parameter";
+    name: string | undefined;
+    index: number;
+    rest: boolean;
+    function:
+      | Pick<ClassDecoratorContext, "kind" | "name">
+      | Pick<
+          ClassMethodDecoratorContext,
+          "kind" | "name" | "static" | "private"
+        >
+      | Pick<
+          ClassSetterDecoratorContext,
+          "kind" | "name" | "static" | "private"
+        >;
+    metadata: DecoratorMetadata;
+    addInitializer(initializer: (this: This) => void): void;
+  }
+
+  type ClassMethodParameterDecorator<This = unknown, Value = unknown> = (
+    value: undefined,
+    context: ClassMethodParameterDecoratorContext<This>,
+  ) => Initializer<This, Value> | void;
 }

@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
+import {
+  parameters,
+  parameter,
+  type ClassMethodParameterDecoratorContext,
+} from "parameters-decorator";
 import { compose } from "decorator-compose";
 
 void test("class", () => {
@@ -363,5 +368,127 @@ void describe("accessor", () => {
       sut.bar,
       "getter(first): getter(second): setter(second): setter(first): assigned",
     );
+  });
+});
+
+void describe("parameter", () => {
+  function prefix(p: string) {
+    return function <This>(
+      _: undefined, // eslint-disable-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
+      context: ClassMethodParameterDecoratorContext<This>,
+    ) {
+      return function (value: string) {
+        return `${p}: ${value}`;
+      };
+    };
+  }
+  function composed<This>(first: string, second: string) {
+    return compose<This, string>(prefix(first), prefix(second));
+  }
+
+  void test("class", () => {
+    @parameters([prefix("first"), prefix("second")])
+    class Foo {
+      readonly a: string;
+      constructor(a: string) {
+        this.a = a;
+      }
+    }
+    @parameters(composed("first", "second"))
+    class Bar {
+      readonly a: string;
+      constructor(a: string) {
+        this.a = a;
+      }
+    }
+
+    const foo = new Foo("original");
+    const bar = new Bar("original");
+
+    assert.equal(foo.a, "second: first: original");
+    assert.equal(bar.a, "second: first: original");
+  });
+
+  void test("static method", () => {
+    class Sut {
+      @parameters([prefix("first"), prefix("second")])
+      static foo(a: string) {
+        return a;
+      }
+
+      @parameters(composed("first", "second"))
+      static bar(a: string) {
+        return a;
+      }
+    }
+
+    assert.equal(Sut.foo("original"), "second: first: original");
+    assert.equal(Sut.bar("original"), "second: first: original");
+  });
+
+  void test("method", () => {
+    class Sut {
+      @parameters([prefix("first"), prefix("second")])
+      foo(a: string) {
+        return a;
+      }
+
+      @parameters(composed("first", "second"))
+      bar(a: string) {
+        return a;
+      }
+    }
+
+    const sut = new Sut();
+
+    assert.equal(sut.foo("original"), "second: first: original");
+    assert.equal(sut.bar("original"), "second: first: original");
+  });
+
+  void test("static setter", () => {
+    class Sut {
+      static _foo: string;
+      @parameter(prefix("first"), prefix("second"))
+      static set foo(value: string) {
+        this._foo = value;
+      }
+
+      static _bar: string;
+      @parameter(composed("first", "second"))
+      static set bar(value: string) {
+        this._bar = value;
+      }
+    }
+
+    Sut.foo = "original";
+    assert.equal(Sut._foo, "second: first: original");
+
+    Sut.bar = "original";
+    assert.equal(Sut._bar, "second: first: original");
+  });
+
+  void test("setter", () => {
+    class Sut {
+      _foo?: string;
+      @parameter(prefix("first"), prefix("second"))
+      set foo(value: string) {
+        this._foo = value;
+      }
+
+      _bar?: string;
+      @parameter(composed("first", "second"))
+      set bar(value: string) {
+        this._bar = value;
+      }
+    }
+
+    const sut = new Sut();
+
+    sut.foo = "original";
+    assert.equal(sut._foo, "second: first: original");
+
+    sut.bar = "original";
+    assert.equal(sut._bar, "second: first: original");
   });
 });
