@@ -1,5 +1,7 @@
 # decorator-compose
 
+[![Published on npm](https://img.shields.io/npm/v/decorator-compose?logo=npm)](https://www.npmjs.com/package/decorator-compose)
+
 This library exposes a helper function to create a composed decorator.
 Only standard decorators are supported, not TypeScript _experimental_ decorators;
 it's tested with both Babel's [`@babel/plugin-proposal-decorators`](https://babeljs.io/docs/babel-plugin-proposal-decorators) and TypeScript 5+.
