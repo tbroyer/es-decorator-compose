@@ -9,7 +9,7 @@ export function compose(...decorators) {
       switch (kind) {
         case "field":
         case "parameter":
-          initializers.push(result);
+          initializers.push(assertCallable(result));
           break;
         case "accessor":
           if (result === null || typeof result !== "object") {
