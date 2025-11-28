@@ -1,6 +1,6 @@
 export declare function compose<
-  Class extends
-    DecoratorTypes.AbstractConstructor = DecoratorTypes.AbstractConstructor,
+  Class extends DecoratorTypes.AbstractConstructor =
+    DecoratorTypes.AbstractConstructor,
 >(
   ...decorators: DecoratorTypes.ClassDecorator<Class>[]
 ): DecoratorTypes.ClassDecorator<Class>;
