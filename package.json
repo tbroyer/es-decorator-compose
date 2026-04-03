@@ -43,7 +43,7 @@
     "parameters-decorator": "^0.3.0",
     "prettier": "^3.8.1",
     "tsd": "^0.33.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "typescript-eslint": "^8.56.0",
     "wireit": "^0.14.12"
   },
