@@ -32,10 +32,10 @@
     "test": "wireit"
   },
   "devDependencies": {
-    "@babel/cli": "^7.28.6",
-    "@babel/core": "^7.29.0",
-    "@babel/plugin-proposal-decorators": "^7.29.0",
-    "@babel/plugin-syntax-typescript": "^7.28.6",
+    "@babel/cli": "^8.0.1",
+    "@babel/core": "^8.0.1",
+    "@babel/plugin-proposal-decorators": "^8.0.2",
+    "@babel/plugin-syntax-typescript": "^8.0.1",
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.0.0",
     "eslint": "^10.0.0",
@@ -46,6 +46,11 @@
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.56.0",
     "wireit": "^0.14.12"
+  },
+  "overrides": {
+    "tsd": {
+      "@babel/code-frame": "^8.0.0"
+    }
   },
   "wireit": {
     "format": {
